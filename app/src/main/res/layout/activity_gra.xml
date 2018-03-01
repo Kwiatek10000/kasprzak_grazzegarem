@@ -8,4 +8,20 @@
     tools:context="pl.edu.kasprzak.grazzegarem.GraActivity"
     android:weightSum="1">
     <!-- Czegoś tutaj brakuje -->
+    <TextView
+        android:id="@+id/clock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <Button
+        android:id="@+id/action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Clic Me"
+        android:textSize="24sp" />
 </LinearLayout>
