@@ -59,6 +59,7 @@ public class GraActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        runningClock = false;
         // Wydaje się, że czegoś tutaj brakuje
         Log.d("CYKL_ZYCIA", "ONPAUSE");
     }
