@@ -1,5 +1,7 @@
 package pl.edu.kasprzak.grazzegarem;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,11 +12,11 @@ import android.widget.TextView;
 
 public class GraActivity extends AppCompatActivity {
 
-    // Po każdym obrocie ekranu Activity tworzone jest ponownie.
-    // Czy jest jakiś sposób, aby te zmienne nie były dla każdej instancji
-    // klasy GraActivity tworzone oddzielnie?
     boolean runningClock = false;
     int counter = 100;
+
+    private static final String PREFERENCES_NAME = "GraZZegarem_preferences";
+    private SharedPreferences preferences;
 
     private Runnable worker;
     private Button action;
@@ -25,11 +27,12 @@ public class GraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gra);
-        // Dlaczego action i clock nie za bardzo podobają się Android Studio?
+
+        preferences = getSharedPreferences(PREFERENCES_NAME, Activity.MODE_PRIVATE);
         action = (Button)findViewById(R.id.action);
         clock = (TextView)findViewById(R.id.clock);
-        // Tutaj tworzymy anonimową klasę która implementuje interfejs Runnable
-        // Odpowiada to definicji class MyRunnable implements Runnable.
+        clock.setText("" + counter);
+
         worker = new Runnable() {
             @Override
             public void run() {
@@ -59,15 +62,24 @@ public class GraActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+
+        SharedPreferences.Editor preferencesEditor = preferences.edit();
+        preferencesEditor.putBoolean("runningClock", runningClock);
+        preferencesEditor.putInt("counter", counter);
+        preferencesEditor.commit();
         runningClock = false;
-        // Wydaje się, że czegoś tutaj brakuje
+
         Log.d("CYKL_ZYCIA", "ONPAUSE");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Podobnie jak tutaj, też czegoś brakuje
+
+        runningClock = preferences.getBoolean("runningClock", runningClock);
+        counter = preferences.getInt("counter", counter) + 1;
+        handler.postDelayed(worker, 1);
+
         Log.d("CYKL_ZYCIA", "ONRESUME");
     }
 
